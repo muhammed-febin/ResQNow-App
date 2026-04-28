@@ -2,9 +2,15 @@ import { useEmergency } from '../context/EmergencyContext';
 import '../styles/Screens.css';
 
 const MedicalScreen = () => {
-  const { setScreen, triggerSOS, profile, services, loading } = useEmergency();
+  const { setScreen, profile, services, loading } = useEmergency();
   
   const ambulance = services.find(s => s.id === 'ambulance');
+
+  const handleCall = () => {
+    if (ambulance) {
+      window.location.href = `tel:${ambulance.number}`;
+    }
+  };
 
   return (
     <div className="screen medical-screen">
@@ -26,7 +32,7 @@ const MedicalScreen = () => {
 
       <button 
         className="primary-action red" 
-        onClick={() => triggerSOS('Medical Emergency')}
+        onClick={handleCall}
         disabled={loading}
       >
         📞 Call Ambulance · {ambulance?.number || '108'}

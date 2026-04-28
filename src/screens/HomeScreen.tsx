@@ -4,7 +4,23 @@ import EmergencyCard from '../components/EmergencyCard';
 import '../styles/Screens.css';
 
 const HomeScreen = () => {
-  const { setScreen } = useEmergency();
+  const { setScreen, services, contacts, addContact } = useEmergency();
+
+  const handleCall = (number: string) => {
+    window.location.href = `tel:${number}`;
+  };
+
+  const handleAddContact = () => {
+    const name = prompt('Enter contact name:');
+    const number = prompt('Enter contact number:');
+    if (name && number) {
+      addContact(name, number);
+    }
+  };
+
+  const ambulance = services.find(s => s.id === 'ambulance');
+  const fire = services.find(s => s.id === 'fire');
+  const police = services.find(s => s.id === 'police');
 
   return (
     <div className="screen home-screen">
@@ -70,23 +86,29 @@ const HomeScreen = () => {
       </div>
       
       <div className="contacts-row">
-        <div className="contact-item">
-          <div className="contact-avatar red">108</div>
+        {/* Service Contacts */}
+        <div className="contact-item" onClick={() => handleCall(ambulance?.number || '108')}>
+          <div className="contact-avatar red">{ambulance?.number || '108'}</div>
           <div className="contact-name">Ambulance</div>
         </div>
-        <div className="contact-item">
-          <div className="contact-avatar amber">101</div>
+        <div className="contact-item" onClick={() => handleCall(fire?.number || '101')}>
+          <div className="contact-avatar amber">{fire?.number || '101'}</div>
           <div className="contact-name">Fire</div>
         </div>
-        <div className="contact-item">
-          <div className="contact-avatar blue">100</div>
+        <div className="contact-item" onClick={() => handleCall(police?.number || '100')}>
+          <div className="contact-avatar blue">{police?.number || '100'}</div>
           <div className="contact-name">Police</div>
         </div>
-        <div className="contact-item">
-          <div className="contact-avatar green">MM</div>
-          <div className="contact-name">Mom</div>
-        </div>
-        <div className="contact-item">
+
+        {/* User Contacts */}
+        {contacts.map(contact => (
+          <div key={contact.id} className="contact-item" onClick={() => handleCall(contact.number)}>
+            <div className={`contact-avatar ${contact.color}`}>{contact.initials}</div>
+            <div className="contact-name">{contact.name}</div>
+          </div>
+        ))}
+
+        <div className="contact-item" onClick={handleAddContact}>
           <div className="contact-avatar add">+</div>
           <div className="contact-name">Add</div>
         </div>

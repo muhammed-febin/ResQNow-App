@@ -6,6 +6,12 @@ const FuelScreen = () => {
   
   const highway = services.find(s => s.id === 'roadside');
 
+  const handleCall = () => {
+    if (highway) {
+      window.location.href = `tel:${highway.number}`;
+    }
+  };
+
   return (
     <div className="screen fuel-screen">
       <div className="topbar">
@@ -45,7 +51,7 @@ const FuelScreen = () => {
       <button 
         className="primary-action green" 
         style={{ marginTop: 24 }} 
-        onClick={() => triggerSOS('Highway Breakdown SOS')}
+        onClick={handleCall}
         disabled={loading}
       >
         🆘 Highway Help · {highway?.number || '1033'}

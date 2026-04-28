@@ -6,6 +6,12 @@ const SafetyScreen = () => {
   
   const police = services.find(s => s.id === 'police');
 
+  const handleCall = () => {
+    if (police) {
+      window.location.href = `tel:${police.number}`;
+    }
+  };
+
   const handleShareLocation = () => {
     const uniqueId = Math.random().toString(36).substring(2, 10).toUpperCase();
     const shareLink = `https://resqnow.live/track/${uniqueId}`;
@@ -38,7 +44,7 @@ const SafetyScreen = () => {
 
       <button 
         className="primary-action blue" 
-        onClick={() => triggerSOS('Police Alert')}
+        onClick={handleCall}
         disabled={loading}
       >
         📞 Alert Police · {police?.number || '100'}

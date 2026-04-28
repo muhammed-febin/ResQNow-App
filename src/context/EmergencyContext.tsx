@@ -10,6 +10,14 @@ interface UserProfile {
   insurance: string;
 }
 
+interface Contact {
+  id: string;
+  name: string;
+  number: string;
+  initials: string;
+  color: string;
+}
+
 interface EmergencyContextType {
   currentScreen: Screen;
   setScreen: (screen: Screen) => void;
@@ -29,6 +37,8 @@ interface EmergencyContextType {
   toggleSetting: (key: 'location' | 'smsFallback' | 'notifications' | 'volunteerMode') => void;
   services: EmergencyService[];
   loading: boolean;
+  contacts: Contact[];
+  addContact: (name: string, number: string) => void;
 }
 
 const EmergencyContext = createContext<EmergencyContextType | undefined>(undefined);
@@ -42,6 +52,11 @@ export const EmergencyProvider = ({ children }: { children: ReactNode }) => {
   const [timer, setTimer] = useState<number | null>(null);
   const [services, setServices] = useState<EmergencyService[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [contacts, setContacts] = useState<Contact[]>([
+    { id: 'mom', name: 'Mom', number: '9876543210', initials: 'MM', color: 'green' },
+    { id: 'ravi', name: 'Ravi', number: '9988776655', initials: 'RK', color: 'green' }
+  ]);
 
   useEffect(() => {
     fetchEmergencyServices().then(data => {
@@ -66,6 +81,18 @@ export const EmergencyProvider = ({ children }: { children: ReactNode }) => {
 
   const toggleSetting = (key: keyof typeof settings) => {
     setSettings(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const addContact = (name: string, number: string) => {
+    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+    const newContact = {
+      id: Math.random().toString(36).substr(2, 9),
+      name,
+      number,
+      initials,
+      color: 'green'
+    };
+    setContacts(prev => [...prev, newContact]);
   };
 
   const setScreen = (screen: Screen) => {
@@ -118,7 +145,9 @@ export const EmergencyProvider = ({ children }: { children: ReactNode }) => {
         settings,
         toggleSetting,
         services,
-        loading
+        loading,
+        contacts,
+        addContact
       }}
     >
       {children}

@@ -2,9 +2,15 @@ import { useEmergency } from '../context/EmergencyContext';
 import '../styles/Screens.css';
 
 const FireScreen = () => {
-  const { setScreen, triggerSOS, services, loading } = useEmergency();
+  const { setScreen, services, loading } = useEmergency();
   
   const fire = services.find(s => s.id === 'fire');
+
+  const handleCall = () => {
+    if (fire) {
+      window.location.href = `tel:${fire.number}`;
+    }
+  };
 
   return (
     <div className="screen fire-screen">
@@ -26,7 +32,7 @@ const FireScreen = () => {
 
       <button 
         className="primary-action amber" 
-        onClick={() => triggerSOS('Fire Emergency')}
+        onClick={handleCall}
         disabled={loading}
       >
         📞 Call Fire Station · {fire?.number || '101'}
